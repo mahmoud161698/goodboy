@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة العمر المتقدمة - محمود مطراوي</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        #calculator {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+        }
+        label {
+            display: block;
+            margin: 10px 0;
+            font-size: 18px;
+            color: #555;
+        }
+        input[type="date"] {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        textarea {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            height: 100px;
+            width: calc(100% - 18px);
+            resize: vertical;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div id="calculator">
+        <h1>حاسبة العمر المتقدمة - محمود مطراوي</h1>
+        <label for="birthdate">تاريخ الميلاد:</label>
+        <input type="date" id="birthdate">
+        <button onclick="calculateAge()">احسب العمر</button>
+        <div id="result"></div>
+        <label for="message">الرسالة المراد إرسالها:</label>
+        <textarea id="message" placeholder="أدخل النص الذي ترغب في إرساله عبر WhatsApp"></textarea>
+        <button onclick="sendMessage()">إرسال رسالة عبر WhatsApp</button>
+        <p><a id="whatsapp-link" href="#" target="_blank">التواصل عبر WhatsApp</a></p>
+    </div>
+
+    <script>
+        var years, days, hours, minutes;
+
+        function calculateAge() {
+            var birthdateString = document.getElementById('birthdate').value;
+            if (!birthdateString) {
+                document.getElementById('result').innerHTML = 'يرجى إدخال تاريخ الميلاد.';
+                return;
+            }
+
+            var birthdate = new Date(birthdateString);
+            var today = new Date();
+
+            if (today < birthdate) {
+                document.getElementById('result').innerHTML = 'تاريخ الميلاد يجب أن يكون قبل اليوم.';
+                return;
+            }
+
+            var ageMilliseconds = today - birthdate;
+            var ageSeconds = Math.floor(ageMilliseconds / 1000);
+
+            seconds = ageSeconds % 60;
+            ageSeconds = Math.floor(ageSeconds / 60);
+            minutes = ageSeconds % 60;
+            ageSeconds = Math.floor(ageSeconds / 60);
+            hours = ageSeconds % 24;
+            days = Math.floor(ageSeconds / 24);
+            years = Math.floor(days / 365);
+
+            updateAge();
+        }
+
+        function updateAge() {
+            var today = new Date();
+            var seconds = today.getSeconds();
+            document.getElementById('result').innerHTML = 'عمرك هو: ' +
+                years + ' سنة و ' +
+                days % 365 + ' أيام و ' +
+                hours + ' ساعات و ' +
+                minutes + ' دقائق و ' +
+                seconds + ' ثواني';
+        }
+
+        function updateWhatsAppLink() {
+            var text = encodeURIComponent(document.getElementById('message').value);
+            var whatsappLink = 'https://api.whatsapp.com/send?phone=+2001104865607&text=' + text;
+            document.getElementById('whatsapp-link').setAttribute('href', whatsappLink);
+        }
+
+        function sendMessage() {
+            updateWhatsAppLink();
+            var whatsappLink = document.getElementById('whatsapp-link').getAttribute('href');
+            window.open(whatsappLink, '_blank');
+        }
+
+        setInterval(updateAge, 1000);
+    </script>
+</body>
+</html>
